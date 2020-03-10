@@ -15,7 +15,7 @@ services:
       - "8002:8080"
       - "8003:8081"
     volumes:
-      - ecs-shared:/tmp
+      - ecs-shared:/data
   ecs-read:
     image: asakchris/ecs-volume-read:1.0.0-SNAPSHOT
     environment:
@@ -24,4 +24,4 @@ services:
       - "8000:8080"
       - "8001:8081"
     volumes:
-      - ecs-shared:/tmp
+      - ecs-shared:/data

@@ -17,4 +17,4 @@ spring:
 
 app:
   file:
-    path: /tmp/write/task.log
+    path: /data/write/task.log
