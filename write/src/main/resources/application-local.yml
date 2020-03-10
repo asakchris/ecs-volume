@@ -1,0 +1,10 @@
+server:
+  port: 8002
+
+management:
+  server:
+    port: 8003
+
+app:
+  file:
+    path: C:\tmp\write\task.log

@@ -1,0 +1,27 @@
+version: '3'
+volumes:
+  ecs-shared:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /tmp/ecs-test
+services:
+  ecs-write:
+    image: asakchris/ecs-volume-write:1.0.0-SNAPSHOT
+    environment:
+      - JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC
+    ports:
+      - "8002:8080"
+      - "8003:8081"
+    volumes:
+      - ecs-shared:/tmp
+  ecs-read:
+    image: asakchris/ecs-volume-write:1.0.0-SNAPSHOT
+    environment:
+      - JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC
+    ports:
+      - "8000:8080"
+      - "8001:8081"
+    volumes:
+      - ecs-shared:/tmp
