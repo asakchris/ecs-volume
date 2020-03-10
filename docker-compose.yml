@@ -17,7 +17,7 @@ services:
     volumes:
       - ecs-shared:/tmp
   ecs-read:
-    image: asakchris/ecs-volume-write:1.0.0-SNAPSHOT
+    image: asakchris/ecs-volume-read:1.0.0-SNAPSHOT
     environment:
       - JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC
     ports:
