@@ -41,12 +41,12 @@ Resources:
       #NetworkMode: awsvpc
       #ExecutionRoleArn: !Ref ECSTaskExecutionRoleArn
       #TaskRoleArn: !Ref ECSTaskRoleArn
-      Volumes:
-        - Name: EFS-SHARED
-          EfsVolumeConfiguration:
-            FileSystemId:
-              Fn::ImportValue: !Join [':', [!Ref 'EfsStackName', 'FileSystemId']]
-            RootDirectory: /data/write
+      #Volumes:
+        #- Name: EFS-SHARED
+          #EfsVolumeConfiguration:
+            #FileSystemId:
+              #Fn::ImportValue: !Join [':', [!Ref 'EfsStackName', 'FileSystemId']]
+            #RootDirectory: /data/write
       ContainerDefinitions:
         - Name: !Sub '${Environment}-${Platform}-${AppName}-CONTAINER'
           Cpu: 512
@@ -55,9 +55,9 @@ Resources:
           PortMappings:
             - ContainerPort: 8080
             - ContainerPort: 8081
-          MountPoints:
-            - SourceVolume: EFS-SHARED
-              ContainerPath: /efs/data
+          #MountPoints:
+            #- SourceVolume: EFS-SHARED
+              #ContainerPath: /efs/data
           Environment:
             - Name: JAVA_OPTS
               Value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC
