@@ -30,6 +30,10 @@ Parameters:
     Description: AMI ID
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id
+  KeyPair:
+    Type: String
+    Description: Key Pair Name
+    Default: key-pair-mar-2020
   InstanceType:
     Description: EC2 instance type
     Type: String
@@ -75,6 +79,7 @@ Resources:
       SecurityGroups:
         - Fn::ImportValue: !Join [':', [!Ref 'SecurityGroupStackName', 'EcsHostSecurityGroupId']]
       InstanceType: !Ref 'InstanceType'
+      KeyName: !Ref 'KeyPair'
       IamInstanceProfile:
         Fn::ImportValue: !Join [':', [!Ref 'RoleStackName', 'EC2InstanceProfileId']]
       UserData:
