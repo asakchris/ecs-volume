@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This stack creates all required security groups
+Parameters:
+  Environment:
+    Type: String
+    Description: Environment Name (DEV/QA/BETA/PROD/DR)
+    AllowedValues: ['DEV', 'QA', 'BETA', 'PROD', 'DR']
+  Platform:
+    Type: String
+    Default: 'IDS'
+    Description: Platform Name
+  VpcStackName:
+    Type: String
+    Description: Name of the stack which is used to create VPC and Subnets
+Resources:
+  FileSystem:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      PerformanceMode: generalPurpose
+      ThroughputMode: bursting
+      FileSystemTags:
+        - Key: Name
+          Value: !Sub '${Environment}-${Platform}-EFS-VOLUME-01'
+  MountTargetSubnetOne:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref 'FileSystem'
+      SubnetId:
+        Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'PrivateSubnetOne']]
+      SecurityGroups:
+        - Fn::ImportValue: !Join [':', [!Ref 'SecurityGroupStackName', 'EfsSecurityGroupId']]
+  MountTargetSubnetTwo:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref 'FileSystem'
+      SubnetId:
+        Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'PrivateSubnetTwo']]
+      SecurityGroups:
+        - Fn::ImportValue: !Join [':', [!Ref 'SecurityGroupStackName', 'EfsSecurityGroupId']]
+Outputs:
+  FileSystem:
+    Description: EFS Id
+    Value: !Ref 'FileSystem'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'FileSystemId' ] ]
+  MountTargetSubnetOneId:
+    Description: EFS Mount Target Subnet One Id
+    Value: !Ref 'MountTargetSubnetOne'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'MountTargetSubnetOneId' ] ]
+  MountTargetSubnetOneIp:
+    Description: EFS Mount Target Subnet One Ip
+    Value: !GetAtt 'MountTargetSubnetOne.IpAddress'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'MountTargetSubnetOneIp' ] ]
+  MountTargetSubnetTwoId:
+    Description: EFS Mount Target Subnet Two Id
+    Value: !Ref 'MountTargetSubnetTwo'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'MountTargetSubnetTwoId' ] ]
+  MountTargetSubnetTwoIp:
+    Description: EFS Mount Target Subnet Two Ip
+    Value: !GetAtt 'MountTargetSubnetTwo.IpAddress'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'MountTargetSubnetTwoIp' ] ]

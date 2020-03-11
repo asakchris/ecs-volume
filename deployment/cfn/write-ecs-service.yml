@@ -1,0 +1,95 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This stack creates write services task definition and service
+Parameters:
+  Environment:
+    Type: String
+    Description: Environment Name (DEV/QA/STG/BETA/PROD/DR)
+    AllowedValues: ['DEV', 'QA', 'BETA', 'PROD', 'DR']
+  Platform:
+    Type: String
+    Default: 'RIPA'
+    Description: Platform Name
+  AppName:
+    Type: String
+    Default: 'WRITE'
+    Description: Application Name
+  VpcStackName:
+    Type: String
+    Description: Name of the stack which is used to create VPC and Subnets
+  SecurityGroupStackName:
+    Type: String
+    Description: Name of the stack which is used to create security groups
+  EfsStackName:
+    Type: String
+    Description: Name of the stack which is used to create EFS
+  RoleStackName:
+    Type: String
+    Description: Name of the stack which is used to create Roles
+  EcsClusterStackName:
+    Type: String
+    Description: Name of the stack which is used to create ECS cluster
+Resources:
+  # Cloud watch log group to which container send logs
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/ECS/${Environment}/${Platform}/${AppName}'
+      RetentionInDays: 1
+
+  # The task definition. This is a simple metadata description of what container to run,
+  # and what resource requirements it has.
+  ECSTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub '${Environment}-${Platform}-${AppName}-TD-01'
+      Cpu: 512
+      Memory: 1024
+      #NetworkMode: awsvpc
+      #ExecutionRoleArn: !Ref ECSTaskExecutionRoleArn
+      #TaskRoleArn: !Ref ECSTaskRoleArn
+      Volumes:
+        - Name: EFS-SHARED
+          EfsVolumeConfiguration:
+            FileSystemId:
+              Fn::ImportValue: !Join [':', [!Ref 'EfsStackName', 'FileSystemId']]
+            RootDirectory: /data/write
+      ContainerDefinitions:
+        - Name: !Sub '${Environment}-${Platform}-${AppName}-CONTAINER'
+          Cpu: 512
+          Memory: 1024
+          Image: asakchris/ecs-volume-write:1.0.0-SNAPSHOT
+          PortMappings:
+            - ContainerPort: 8080
+            - ContainerPort: 8081
+          MountPoints:
+            - SourceVolume: EFS-SHARED
+              containerPath: /efs/data
+          Environment:
+            - Name: JAVA_OPTS
+              Value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC
+          HealthCheck:
+            Command: ["CMD-SHELL","wget --quiet --tries=1 --spider http://localhost:8081/actuator/health || exit 1",]
+            Interval: 60
+            Retries: 3
+            StartPeriod: 30
+            Timeout: 30
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+
+  # Service is a resource which allows to run multiple copies of a type of task, and gather up their logs and metrics,
+  # as well as monitor the number of running tasks and replace any that have crashed
+  ECSService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub '${Environment}-${Platform}-${AppName}-SERVICE-01'
+      Cluster:
+        Fn::ImportValue: !Join [':', [!Ref 'EcsClusterStackName', 'EcsClusterName']]
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+      DesiredCount: 1
+      TaskDefinition: !Ref ECSTaskDefinition

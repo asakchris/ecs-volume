@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This stack creates all required security groups
+Parameters:
+  Environment:
+    Type: String
+    Description: Environment Name (DEV/QA/BETA/PROD/DR)
+    AllowedValues: ['DEV', 'QA', 'BETA', 'PROD', 'DR']
+  Platform:
+    Type: String
+    Default: 'IDS'
+    Description: Platform Name
+Resources:
+  # Role for the EC2 hosts. This allows the ECS agent on the EC2 hosts
+  # to communicate with the ECS control plane, as well as download the docker
+  # images from ECR to run on your host.
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${Environment}-${Platform}-EC2-ROLE-01'
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ec2.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role'
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub '${Environment}-${Platform}-EC2-PROFILE-01'
+      Path: /
+      Roles:
+        - !Ref 'EC2Role'
+
+  AutoscalingRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${Environment}-${Platform}-AUTO-SCALING-ROLE-02'
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [application-autoscaling.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole'
+Outputs:
+  EC2Role:
+    Description: ARN of Role for the EC2 hosts
+    Value: !GetAtt 'EC2Role.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'EC2RoleArn' ] ]
+  AutoscalingRole:
+    Description: Auto Scaling Role ARN
+    Value: !GetAtt 'AutoscalingRole.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'AutoscalingRoleArn' ] ]
+  EC2InstanceProfile:
+    Description: EC2 Instance Profile Id
+    Value: !Ref 'EC2InstanceProfile'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'EC2InstanceProfileId' ] ]
