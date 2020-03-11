@@ -310,7 +310,7 @@ show_script_usage_deploy() {
     echo -e "Script Usage:"
     echo -e "\t ./deployStack.sh <ENV> <ImageVersion> <IsActive>\n"
     echo -e "Pass 2 arguments to create/update Cloudformation stack"
-    echo -e "(1) Environment Name (DEV/QA/BETA/PROD/DR)"
+    echo -e "(1) Environment Name (DEV)"
     echo -e "(2) Version of docker image"
     echo -e "(3) Is Active Environment? <true/false> If true, then it starts task for all ECS services, otherwise it will not start any tasks"
     echo -e "************************************************************************************************"
@@ -323,7 +323,7 @@ show_script_usage_maintenance() {
     echo -e "Script Usage:"
     echo -e "\t ./maintenance.sh <ENV> <Action>\n"
     echo -e "Pass 2 arguments to start or stop all ECS service tasks"
-    echo -e "(1) Environment Name (DEV/QA/BETA/PROD/DR)"
+    echo -e "(1) Environment Name (DEV)"
     echo -e "(2) Action (start/stop)"
     echo -e "************************************************************************************************"
 }
@@ -336,6 +336,6 @@ show_script_usage_delete()
     echo -e "Script Usage:"
     echo -e "\t ./deleteStack.sh <ENV>\n"
     echo -e "Pass 1 argument to delete Cloudformation stack"
-    echo -e "(1) Environment Name (DEV/QA/BETA/PROD/DR)"
+    echo -e "(1) Environment Name (DEV)"
     echo -e "************************************************************************************************"
 }
