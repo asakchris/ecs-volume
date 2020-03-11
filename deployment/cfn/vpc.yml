@@ -1,5 +1,14 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: This stack creates VPC with 2 public and 2 private subnets
+Parameters:
+  Environment:
+    Type: String
+    Description: Environment Name (DEV/QA/STG/BETA/PROD/DR)
+    AllowedValues: ['DEV', 'QA', 'BETA', 'PROD', 'DR']
+  Platform:
+    Type: String
+    Default: 'IDS'
+    Description: Platform Name
 Mappings:
   # Hard values for the subnet masks. These masks define the range of internal IP addresses that can be assigned.
   SubnetConfig:

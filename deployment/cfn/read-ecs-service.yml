@@ -7,18 +7,12 @@ Parameters:
     AllowedValues: ['DEV', 'QA', 'BETA', 'PROD', 'DR']
   Platform:
     Type: String
-    Default: 'RIPA'
+    Default: 'IDS'
     Description: Platform Name
   AppName:
     Type: String
     Default: 'READ'
     Description: Application Name
-  VpcStackName:
-    Type: String
-    Description: Name of the stack which is used to create VPC and Subnets
-  SecurityGroupStackName:
-    Type: String
-    Description: Name of the stack which is used to create security groups
   EfsStackName:
     Type: String
     Description: Name of the stack which is used to create EFS

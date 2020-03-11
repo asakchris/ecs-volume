@@ -1,0 +1,7 @@
+{
+  "Environment": "${app_environment}",
+  "EfsStackName": "${app_environment}-${app_name}-EFS",
+  "AlbStackName": "${app_environment}-${app_name}-ALB",
+  "RoleStackName": "${app_environment}-${app_name}-ROLE",
+  "EcsClusterStackName": "${app_environment}-${app_name}-ECS-CLUSTER"
+}
