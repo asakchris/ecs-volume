@@ -70,9 +70,9 @@ Resources:
       GroupDescription: Access to EFS
       VpcId:
         Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'VPCId']]
-    Tags:
-      - Key: Name
-        Value: !Sub '${Environment}-${Platform}-EFS-SG-03'
+      Tags:
+        - Key: Name
+          Value: !Sub '${Environment}-${Platform}-EFS-SG-03'
   EfsSecurityGroupIngressFromEcsHost:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
