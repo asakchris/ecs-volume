@@ -60,7 +60,7 @@ Resources:
             - ContainerPort: 8081
           MountPoints:
             - SourceVolume: EFS-SHARED
-              containerPath: /efs/data
+              ContainerPath: /efs/data
           Environment:
             - Name: JAVA_OPTS
               Value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC
@@ -88,4 +88,4 @@ Resources:
         - ContainerName: !Sub '${Environment}-${Platform}-${AppName}-CONTAINER'
           ContainerPort: 8080
           TargetGroupArn:
-            Fn::ImportValue: !Join [':', [!Ref 'AlbStackName', 'ReadTargetGroup']]
+            Fn::ImportValue: !Join [':', [!Ref 'AlbStackName', 'ReadTargetGroupArn']]
