@@ -12,6 +12,9 @@ Parameters:
   VpcStackName:
     Type: String
     Description: Name of the stack which is used to create VPC and Subnets
+  SecurityGroupStackName:
+    Type: String
+    Description: Name of the stack which is used to create security groups
 Resources:
   FileSystem:
     Type: AWS::EFS::FileSystem
