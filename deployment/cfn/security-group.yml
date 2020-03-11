@@ -32,9 +32,9 @@ Resources:
           ToPort: 80
           CidrIpv6: '::/0'
           Description: Allow IPV6 HTTP
-    Tags:
-      - Key: Name
-        Value: !Sub '${Environment}-${Platform}-ALB-SG-01'
+      Tags:
+        - Key: Name
+          Value: !Sub '${Environment}-${Platform}-ALB-SG-01'
 
   # A security group for the EC2 hosts that will run the containers.
   # Two rules, allowing network traffic from a public facing load
@@ -45,9 +45,9 @@ Resources:
       GroupDescription: Access to the ECS hosts that run containers
       VpcId:
         Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'VPCId']]
-    Tags:
-      - Key: Name
-        Value: !Sub '${Environment}-${Platform}-ECS-HOST-SG-02'
+      Tags:
+        - Key: Name
+          Value: !Sub '${Environment}-${Platform}-ECS-HOST-SG-02'
   EcsHostSecurityGroupIngressFromPublicALB:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:

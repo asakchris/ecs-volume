@@ -177,7 +177,7 @@ deploy_stack_group_parallel() {
         # Get parameter overrides for given stack
         param_values="$(get_parameter_values ${param_file})"
         # Run deploy command in parallel and collect child pid
-        local _deploy_command="aws --region $aws_region cloudformation deploy --template-file ${template_file} --stack-name ${stack_name} --parameter-overrides ${param_values} --no-fail-on-empty-changeset"
+        local _deploy_command="aws --region $aws_region cloudformation deploy --template-file ${template_file} --stack-name ${stack_name} --parameter-overrides ${param_values} --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM"
         execute_cfn "${_deploy_command}" &
         _group_child_pids+=("$!")
         _group_stacks+=("${stack_name}")
