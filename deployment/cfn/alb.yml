@@ -62,7 +62,7 @@ Resources:
   ReadTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Sub '${Environment}-${Platform}-WRITE-TG-01'
+      Name: !Sub '${Environment}-${Platform}-READ-TG-01'
       HealthCheckIntervalSeconds: 6
       HealthCheckPath: /
       HealthCheckProtocol: HTTP

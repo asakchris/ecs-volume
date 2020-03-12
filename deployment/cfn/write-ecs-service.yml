@@ -46,7 +46,7 @@ Resources:
           #EfsVolumeConfiguration:
             #FileSystemId:
               #Fn::ImportValue: !Join [':', [!Ref 'EfsStackName', 'FileSystemId']]
-            #RootDirectory: /data/write
+            #RootDirectory: /
       ContainerDefinitions:
         - Name: !Sub '${Environment}-${Platform}-${AppName}-CONTAINER'
           Cpu: 512
@@ -57,7 +57,7 @@ Resources:
             - ContainerPort: 8081
           #MountPoints:
             #- SourceVolume: EFS-SHARED
-              #ContainerPath: /efs/data
+              #ContainerPath: /data/write
           Environment:
             - Name: JAVA_OPTS
               Value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC
