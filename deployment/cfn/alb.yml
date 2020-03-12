@@ -64,7 +64,7 @@ Resources:
     Properties:
       Name: !Sub '${Environment}-${Platform}-READ-TG-01'
       HealthCheckIntervalSeconds: 6
-      HealthCheckPath: /
+      HealthCheckPath: /api/v1/ecsvolume/read/actuator/health
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2

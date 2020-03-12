@@ -57,7 +57,6 @@ Resources:
           Image: asakchris/ecs-volume-read:1.0.0-SNAPSHOT
           PortMappings:
             - ContainerPort: 8080
-            - ContainerPort: 8081
           #MountPoints:
             #- SourceVolume: EFS-SHARED
               #ContainerPath: /data/write
