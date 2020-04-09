@@ -36,6 +36,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       Name: !Sub '${Environment}-${Platform}-DEFAULT-TG-01'
+      TargetType: ip
       HealthCheckIntervalSeconds: 6
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
@@ -63,6 +64,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       Name: !Sub '${Environment}-${Platform}-READ-TG-01'
+      TargetType: ip
       HealthCheckIntervalSeconds: 6
       HealthCheckPath: /api/v1/ecsvolume/read/actuator/health
       HealthCheckProtocol: HTTP
