@@ -36,10 +36,10 @@ Resources:
         - Key: Name
           Value: !Sub '${Environment}-${Platform}-ALB-SG-01'
 
-  # A security group for the EC2 hosts that will run the containers.
+  # A security group for the containers.
   # Two rules, allowing network traffic from a public facing load
   # balancer and from other hosts in the security group.
-  EcsHostSecurityGroup:
+  ContainerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the ECS hosts that run containers
@@ -47,21 +47,21 @@ Resources:
         Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'VPCId']]
       Tags:
         - Key: Name
-          Value: !Sub '${Environment}-${Platform}-ECS-HOST-SG-02'
-  EcsHostSecurityGroupIngressFromPublicALB:
+          Value: !Sub '${Environment}-${Platform}-CONTAINER-SG-02'
+  ContainerSecurityGroupIngressFromPublicALB:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       Description: Ingress from the public ALB
-      GroupId: !Ref 'EcsHostSecurityGroup'
+      GroupId: !Ref 'ContainerSecurityGroup'
       IpProtocol: -1
       SourceSecurityGroupId: !Ref 'PublicLoadBalancerSG'
-  EcsSecurityGroupIngressFromSelf:
+  ContainerSecurityGroupIngressFromSelf:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       Description: Ingress from other containers in the same security group
-      GroupId: !Ref 'EcsHostSecurityGroup'
+      GroupId: !Ref 'ContainerSecurityGroup'
       IpProtocol: -1
-      SourceSecurityGroupId: !Ref 'EcsHostSecurityGroup'
+      SourceSecurityGroupId: !Ref 'ContainerSecurityGroup'
 
   # Security Group for an Amazon EFS File System
   EfsSecurityGroup:
@@ -81,18 +81,18 @@ Resources:
       IpProtocol: tcp
       FromPort: 2049
       ToPort: 2049
-      SourceSecurityGroupId: !Ref 'EcsHostSecurityGroup'
+      SourceSecurityGroupId: !Ref 'ContainerSecurityGroup'
 Outputs:
   PublicLoadBalancerSG:
     Description: Public Load Balancer Security Group Id
     Value: !Ref 'PublicLoadBalancerSG'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'PublicAlbSecurityGroupId' ] ]
-  EcsHostSecurityGroup:
-    Description: ECS Host Security Group Id
-    Value: !Ref 'EcsHostSecurityGroup'
+  ContainerSecurityGroup:
+    Description: Container Security Group Id
+    Value: !Ref 'ContainerSecurityGroup'
     Export:
-      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'EcsHostSecurityGroupId' ] ]
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ContainerSecurityGroupId' ] ]
   EfsSecurityGroup:
     Description: EFS Security Group Id
     Value: !Ref 'EcsHostSecurityGroup'

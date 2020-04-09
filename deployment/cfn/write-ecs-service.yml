@@ -22,6 +22,12 @@ Parameters:
   EcsClusterStackName:
     Type: String
     Description: Name of the stack which is used to create ECS cluster
+  VpcStackName:
+    Type: String
+    Description: Name of the stack which is used to create VPC and Subnets
+  SecurityGroupStackName:
+    Type: String
+    Description: Name of the stack used to create security group
 Resources:
   # Cloud watch log group to which container send logs
   LogGroup:
@@ -90,3 +96,11 @@ Resources:
         MinimumHealthyPercent: 0
       DesiredCount: 1
       TaskDefinition: !Ref ECSTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - Fn::ImportValue: !Join [':', [!Ref 'SecurityGroupStackName', 'ContainerSecurityGroupId']]
+          Subnets:
+            - Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'PrivateSubnetOne']]
+            - Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'PrivateSubnetTwo']]
