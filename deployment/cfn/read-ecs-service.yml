@@ -87,6 +87,7 @@ Resources:
       ServiceName: !Sub '${Environment}-${Platform}-${AppName}-SERVICE-02'
       Cluster:
         Fn::ImportValue: !Join [':', [!Ref 'EcsClusterStackName', 'EcsClusterName']]
+      LaunchType: FARGATE
       DeploymentConfiguration:
         MaximumPercent: 100
         MinimumHealthyPercent: 0
