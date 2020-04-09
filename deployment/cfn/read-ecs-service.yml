@@ -44,7 +44,8 @@ Resources:
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
-      #ExecutionRoleArn: !Ref ECSTaskExecutionRoleArn
+      ExecutionRoleArn:
+        Fn::ImportValue: !Join [':', [!Ref 'RoleStackName', 'ECSTaskExecutionRoleArn']]
       #TaskRoleArn: !Ref ECSTaskRoleArn
       #Volumes:
         #- Name: EFS-SHARED
