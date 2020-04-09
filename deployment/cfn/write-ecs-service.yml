@@ -38,7 +38,9 @@ Resources:
       Family: !Sub '${Environment}-${Platform}-${AppName}-TD-01'
       Cpu: 512
       Memory: 1024
-      #NetworkMode: awsvpc
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
       #ExecutionRoleArn: !Ref ECSTaskExecutionRoleArn
       #TaskRoleArn: !Ref ECSTaskRoleArn
       #Volumes:
