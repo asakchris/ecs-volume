@@ -73,10 +73,10 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${Environment}-${Platform}-EFS-SG-03'
-  EfsSecurityGroupIngressFromEcsHost:
+  EfsSecurityGroupIngressFromContainer:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      Description: Ingress from ECS host
+      Description: Ingress from Container
       GroupId: !Ref 'EfsSecurityGroup'
       IpProtocol: tcp
       FromPort: 2049
@@ -95,6 +95,6 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ContainerSecurityGroupId' ] ]
   EfsSecurityGroup:
     Description: EFS Security Group Id
-    Value: !Ref 'EcsHostSecurityGroup'
+    Value: !Ref 'EfsSecurityGroup'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'EfsSecurityGroupId' ] ]
