@@ -6,15 +6,15 @@
   "requiresCompatibilities": [
     "FARGATE"
   ],
-  "executionRoleArn": "arn:aws:iam::734334009528:role/DEV-IDS-ECS-TASK-EXEC-ROLE-01",
+  "executionRoleArn": "<refer role stack>",
   "volumes": [
     {
       "name": "EFS-SHARED",
       "efsVolumeConfiguration": {
-        "fileSystemId": "fs-360dc5b5",
+        "fileSystemId": "<refer EFS stack>",
         "transitEncryption": "ENABLED",
         "authorizationConfig": {
-          "accessPointId": "fsap-0404681d93c1c1581"
+          "accessPointId": "<refer EFS access point CLI command output>"
         }
       }
     }
