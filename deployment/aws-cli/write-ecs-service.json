@@ -2,7 +2,7 @@
   "cluster": "DEV-IDS-ECS-CLUSTER-01",
   "service": "DEV-IDS-WRITE-SERVICE-01",
   "desiredCount": 1,
-  "taskDefinition": "arn:aws:ecs:us-east-1:734334009528:task-definition/DEV-IDS-WRITE-TD-01:13",
+  "taskDefinition": "arn:aws:ecs:us-east-1:734334009528:task-definition/DEV-IDS-WRITE-TD-01:15",
   "deploymentConfiguration": {
     "maximumPercent": 100,
     "minimumHealthyPercent": 0
