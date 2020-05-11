@@ -1,0 +1,19 @@
+{
+  "ClientToken": "scheduler-ap",
+  "FileSystemId": "fs-3e73bcbd",
+  "PosixUser": {
+    "Uid": 1000,
+    "Gid": 1000,
+    "SecondaryGids": [
+      1001
+    ]
+  },
+  "RootDirectory": {
+    "Path": "/scheduler",
+    "CreationInfo": {
+      "OwnerUid": 1000,
+      "OwnerGid": 1000,
+      "Permissions": "777"
+    }
+  }
+}

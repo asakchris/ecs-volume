@@ -1,0 +1,59 @@
+{
+  "family": "DEV-IDS-WRITE-TD-01",
+  "cpu": 512,
+  "memory": 1024,
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "executionRoleArn": "arn:aws:iam::734334009528:role/DEV-IDS-ECS-TASK-EXEC-ROLE-01",
+  "volumes": [
+    {
+      "name": "EFS-SHARED",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-3e73bcbd",
+        "transitEncryption": "ENABLED",
+        "authorizationConfig": {
+          "accessPointId": "fsap-0647d25471e769f5d"
+        }
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "DEV-IDS-WRITE-CONTAINER",
+      "cpu": 512,
+      "memory": 1024,
+      "image": "asakchris/ecs-volume-write:1.0.0-SNAPSHOT",
+      "portMappings": [
+        {
+          "containerPort": 8080
+        },
+        {
+          "containerPort": 8081
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "EFS-SHARED",
+          "containerPath": "/data/scheduler",
+          "readOnly": false
+        }
+      ],
+      "environment": [
+        {
+          "name": "JAVA_OPTS",
+          "value": "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ECS/DEV/IDS/WRITE",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
