@@ -11,10 +11,10 @@
     {
       "name": "EFS-SHARED",
       "efsVolumeConfiguration": {
-        "fileSystemId": "fs-3e73bcbd",
+        "fileSystemId": "fs-360dc5b5",
         "transitEncryption": "ENABLED",
         "authorizationConfig": {
-          "accessPointId": "fsap-0647d25471e769f5d"
+          "accessPointId": "fsap-0404681d93c1c1581"
         }
       }
     }
