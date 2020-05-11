@@ -14,7 +14,7 @@
         "subnet-0c41d47262c99325c"
       ],
       "securityGroups": [
-        "sg-02f89b3a1c29f2d16"
+        "sg-07eb21be7bf351fad"
       ],
       "assignPublicIp": "DISABLED"
     }
