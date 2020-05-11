@@ -1,0 +1,24 @@
+{
+  "cluster": "DEV-IDS-ECS-CLUSTER-01",
+  "service": "DEV-IDS-READ-SERVICE-02",
+  "desiredCount": 1,
+  "taskDefinition": "arn:aws:ecs:us-east-1:XX:task-definition/DEV-IDS-READ-TD-01:XX",
+  "deploymentConfiguration": {
+    "maximumPercent": 100,
+    "minimumHealthyPercent": 0
+  },
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": [
+        "subnet-06c38542dfab6bf73",
+        "subnet-0c41d47262c99325c"
+      ],
+      "securityGroups": [
+        "sg-02f89b3a1c29f2d16"
+      ],
+      "assignPublicIp": "DISABLED"
+    }
+  },
+  "platformVersion": "1.4.0",
+  "forceNewDeployment": true
+}
