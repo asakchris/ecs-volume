@@ -1,7 +1,7 @@
 {
   "family": "DEV-IDS-WRITE-TD-01",
-  "cpu": 512,
-  "memory": 1024,
+  "cpu": "512",
+  "memory": "1024",
   "networkMode": "awsvpc",
   "requiresCompatibilities": [
     "FARGATE"
@@ -22,8 +22,8 @@
   "containerDefinitions": [
     {
       "name": "DEV-IDS-WRITE-CONTAINER",
-      "cpu": 512,
-      "memory": 1024,
+      "cpu": "512",
+      "memory": "1024",
       "image": "asakchris/ecs-volume-write:1.0.0-SNAPSHOT",
       "portMappings": [
         {
