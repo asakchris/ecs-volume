@@ -18,5 +18,4 @@ COPY --from=stage0 --chown=ids_app:ids_grp /opt/docker /opt/docker
 RUN chown -R ids_app:ids_grp /data/scheduler
 USER 1000
 VOLUME /data/scheduler
-RUN mkdir -p /data/scheduler/write
 ENTRYPOINT java ${JAVA_OPTS} -cp /opt/docker/app:/opt/docker/app/lib/* com.example.Application
