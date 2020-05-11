@@ -15,4 +15,4 @@ spring:
 
 app:
   file:
-    path: /data/scheduler/write/task.log
+    path: /data/scheduler/task.log

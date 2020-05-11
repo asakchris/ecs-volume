@@ -9,7 +9,7 @@ RUN ["chmod", "-R", "u=rX,g=rX", "/opt/docker"]
 
 FROM openjdk:8
 VOLUME /tmp
-RUN mkdir -p /data/scheduler/write
+RUN mkdir -p /data/scheduler
 USER root
 RUN groupadd -g 1000 ids_grp
 RUN id -u ids_app 2> /dev/null || useradd --system --create-home --uid 1000 --gid 1000 ids_app
