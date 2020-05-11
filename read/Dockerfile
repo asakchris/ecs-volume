@@ -9,12 +9,13 @@ RUN ["chmod", "-R", "u=rX,g=rX", "/opt/docker"]
 
 FROM openjdk:8
 VOLUME /tmp
-RUN mkdir -p /data/scheduler
+RUN mkdir -p /data/scheduler/write
 USER root
 RUN groupadd -g 1000 ids_grp
 RUN id -u ids_app 2> /dev/null || useradd --system --create-home --uid 1000 --gid 1000 ids_app
 WORKDIR /opt/docker
 COPY --from=stage0 --chown=ids_app:ids_grp /opt/docker /opt/docker
+RUN chown -R ids_app:ids_grp /data/scheduler
 USER 1000
 VOLUME /data/scheduler
 RUN mkdir -p /data/scheduler/write
