@@ -1,5 +1,5 @@
 {
-  "family": "DEV-IDS-READ-TD-01",
+  "family": "DEV-IDS-READ-TD-02",
   "cpu": "512",
   "memory": "1024",
   "networkMode": "awsvpc",
@@ -24,7 +24,7 @@
       "name": "DEV-IDS-READ-CONTAINER",
       "cpu": 512,
       "memory": 1024,
-      "image": "asakchris/ecs-volume-write:1.0.0-SNAPSHOT",
+      "image": "asakchris/ecs-volume-read:1.0.0-SNAPSHOT",
       "portMappings": [
         {
           "containerPort": 8080

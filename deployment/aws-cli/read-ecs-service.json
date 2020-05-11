@@ -2,7 +2,7 @@
   "cluster": "DEV-IDS-ECS-CLUSTER-01",
   "service": "DEV-IDS-READ-SERVICE-02",
   "desiredCount": 1,
-  "taskDefinition": "arn:aws:ecs:us-east-1:XX:task-definition/DEV-IDS-READ-TD-01:XX",
+  "taskDefinition": "arn:aws:ecs:us-east-1:734334009528:task-definition/DEV-IDS-READ-TD-02:10",
   "deploymentConfiguration": {
     "maximumPercent": 100,
     "minimumHealthyPercent": 0
