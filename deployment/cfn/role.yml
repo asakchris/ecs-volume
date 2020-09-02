@@ -23,9 +23,27 @@ Resources:
       Path: /
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
+  ECSTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${Environment}-${Platform}-ECS-TASK-ROLE-02'
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ ecs-tasks.amazonaws.com ]
+            Action: [ 'sts:AssumeRole' ]
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
 Outputs:
   ECSTaskExecutionRole:
     Description: ARN of ECS task execution role
     Value: !GetAtt 'ECSTaskExecutionRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ECSTaskExecutionRoleArn' ] ]
+  ECSTaskRole:
+    Description: ARN of ECS task role
+    Value: !GetAtt 'ECSTaskRole.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ECSTaskRoleArn' ] ]

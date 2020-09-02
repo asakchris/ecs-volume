@@ -52,7 +52,8 @@ Resources:
         - FARGATE
       ExecutionRoleArn:
         Fn::ImportValue: !Join [':', [!Ref 'RoleStackName', 'ECSTaskExecutionRoleArn']]
-      #TaskRoleArn: !Ref ECSTaskRoleArn
+      TaskRoleArn:
+        Fn::ImportValue: !Join [':', [!Ref 'RoleStackName', 'ECSTaskRoleArn']]
       Volumes:
         - Name: EFS-SHARED
           EFSVolumeConfiguration:
