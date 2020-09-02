@@ -53,12 +53,16 @@ Resources:
       ExecutionRoleArn:
         Fn::ImportValue: !Join [':', [!Ref 'RoleStackName', 'ECSTaskExecutionRoleArn']]
       #TaskRoleArn: !Ref ECSTaskRoleArn
-      #Volumes:
-        #- Name: EFS-SHARED
-          #EfsVolumeConfiguration:
-            #FileSystemId:
-              #Fn::ImportValue: !Join [':', [!Ref 'EfsStackName', 'FileSystemId']]
+      Volumes:
+        - Name: EFS-SHARED
+          EFSVolumeConfiguration:
+            FilesystemId:
+              Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'FileSystemId' ] ]
             #RootDirectory: /
+            TransitEncryption: 'ENABLED'
+            AuthorizationConfig:
+              AccessPointId:
+                Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'AccessPointId' ] ]
       ContainerDefinitions:
         - Name: !Sub '${Environment}-${Platform}-${AppName}-CONTAINER'
           Cpu: 512
@@ -66,9 +70,11 @@ Resources:
           Image: asakchris/ecs-volume-read:1.0.0-SNAPSHOT
           PortMappings:
             - ContainerPort: 8080
-          #MountPoints:
-            #- SourceVolume: EFS-SHARED
-              #ContainerPath: /data/write
+            - ContainerPort: 8081
+          MountPoints:
+            - SourceVolume: EFS-SHARED
+              ContainerPath: /data/write
+              ReadOnly: true
           Environment:
             - Name: JAVA_OPTS
               Value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC

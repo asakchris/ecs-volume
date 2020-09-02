@@ -66,13 +66,14 @@ Resources:
       Name: !Sub '${Environment}-${Platform}-READ-TG-01'
       TargetType: ip
       HealthCheckIntervalSeconds: 6
-      HealthCheckPath: /api/v1/ecsvolume/read/actuator/health
+      HealthCheckPath: /actuator/health
       HealthCheckProtocol: HTTP
+      HealthCheckPort: 8081
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
-      Port: 80
-      Protocol: HTTP
       UnhealthyThresholdCount: 2
+      Port: 8080
+      Protocol: HTTP
       VpcId:
         Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'VPCId']]
   ReadLoadBalancerRule:

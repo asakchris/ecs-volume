@@ -4,6 +4,8 @@ server:
     context-path: /api/v1/ecsvolume/read
 
 management:
+  server:
+    port: 8081
   endpoints:
     web:
       exposure:

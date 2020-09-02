@@ -40,6 +40,21 @@ Resources:
         Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'PrivateSubnetTwo']]
       SecurityGroups:
         - Fn::ImportValue: !Join [':', [!Ref 'SecurityGroupStackName', 'EfsSecurityGroupId']]
+  AccessPointResource:
+    Type: AWS::EFS::AccessPoint
+    Properties:
+      FileSystemId: !Ref FileSystem
+      PosixUser:
+        Uid: '1000'
+        Gid: '1000'
+        SecondaryGids:
+          - '1001'
+      RootDirectory:
+        Path: '/scheduler'
+        CreationInfo:
+          OwnerGid: '1000'
+          OwnerUid: '1000'
+          Permissions: '774'
 Outputs:
   FileSystem:
     Description: EFS Id
@@ -66,3 +81,8 @@ Outputs:
     Value: !GetAtt 'MountTargetSubnetTwo.IpAddress'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'MountTargetSubnetTwoIp' ] ]
+  AccessPointId:
+    Description: EFS Access Point Id
+    Value: !Ref 'AccessPointResource'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'AccessPointId' ] ]
