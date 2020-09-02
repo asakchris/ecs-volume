@@ -49,6 +49,7 @@ Resources:
         Gid: '1000'
         SecondaryGids:
           - '1001'
+          - '1002'
       RootDirectory:
         Path: '/scheduler'
         CreationInfo:

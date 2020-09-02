@@ -11,11 +11,11 @@ FROM openjdk:8
 VOLUME /tmp
 RUN mkdir -p /data/scheduler
 USER root
-RUN groupadd -g 1000 ids_grp
-RUN id -u ids_app 2> /dev/null || useradd --system --create-home --uid 1000 --gid 1000 ids_app
+RUN groupadd -g 1001 ids_grp_rw
+RUN id -u ids_app 2> /dev/null || useradd --system --create-home --uid 1001 --gid 1001 ids_app_rw
 WORKDIR /opt/docker
-COPY --from=stage0 --chown=ids_app:ids_grp /opt/docker /opt/docker
-RUN chown -R ids_app:ids_grp /data/scheduler
-USER 1000
+COPY --from=stage0 --chown=ids_app_rw:ids_grp_rw /opt/docker /opt/docker
+#RUN chown -R ids_app_rw:ids_grp_rw /data/scheduler
+USER 1001
 VOLUME /data/scheduler
 ENTRYPOINT java ${JAVA_OPTS} -cp /opt/docker/app:/opt/docker/app/lib/* com.example.Application
