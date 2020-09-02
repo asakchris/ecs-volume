@@ -70,7 +70,7 @@ Resources:
             - ContainerPort: 8081
           MountPoints:
             - SourceVolume: EFS-SHARED
-              ContainerPath: /data/write
+              ContainerPath: /data/scheduler
           Environment:
             - Name: JAVA_OPTS
               Value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC
