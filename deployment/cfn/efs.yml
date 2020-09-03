@@ -34,9 +34,9 @@ Resources:
             Principal:
               AWS:
                 Fn::ImportValue: !Join [':', [!Ref 'RoleStackName', 'ECSTaskRoleArn']]
-            Condition:
-              StringEquals:
-                'elasticfilesystem:AccessPointArn': !GetAtt 'AccessPointResource.Arn'
+            #Condition:
+              #StringEquals:
+                #'elasticfilesystem:AccessPointArn': !GetAtt 'AccessPointResource.Arn'
       FileSystemTags:
         - Key: Name
           Value: !Sub '${Environment}-${Platform}-EFS-VOLUME-01'

@@ -64,6 +64,7 @@ Resources:
             AuthorizationConfig:
               AccessPointId:
                 Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'AccessPointId' ] ]
+              IAM: ENABLED
       ContainerDefinitions:
         - Name: !Sub '${Environment}-${Platform}-${AppName}-CONTAINER'
           Cpu: 512
