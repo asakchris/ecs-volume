@@ -15,12 +15,28 @@ Parameters:
   SecurityGroupStackName:
     Type: String
     Description: Name of the stack which is used to create security groups
+  RoleStackName:
+    Type: String
+    Description: Name of the stack which is used to create IAM Roles
 Resources:
   FileSystem:
     Type: AWS::EFS::FileSystem
     Properties:
       PerformanceMode: generalPurpose
       ThroughputMode: bursting
+      FileSystemPolicy:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Action:
+              - 'elasticfilesystem:ClientMount'
+              - 'elasticfilesystem:ClientWrite'
+            Principal:
+              AWS:
+                Fn::ImportValue: !Join [':', [!Ref 'RoleStackName', 'ECSTaskRoleArn']]
+            #Condition:
+              #StringEquals:
+                #'elasticfilesystem:AccessPointArn': !GetAtt 'AccessPointResource.Arn'
       FileSystemTags:
         - Key: Name
           Value: !Sub '${Environment}-${Platform}-EFS-VOLUME-01'
@@ -56,6 +72,9 @@ Resources:
           OwnerGid: '1000'
           OwnerUid: '1000'
           Permissions: '774'
+      AccessPointTags:
+        - Key: Name
+          Value: !Sub '${Environment}-${Platform}-EFS-ACCESS-POINT-01'
 Outputs:
   FileSystem:
     Description: EFS Id

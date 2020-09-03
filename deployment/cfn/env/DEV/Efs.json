@@ -1,5 +1,6 @@
 {
   "Environment": "${app_environment}",
   "VpcStackName": "${app_environment}-${app_name}-VPC",
-  "SecurityGroupStackName": "${app_environment}-${app_name}-SECURITY-GROUP"
+  "SecurityGroupStackName": "${app_environment}-${app_name}-SECURITY-GROUP",
+  "RoleStackName": "${app_environment}-${app_name}-ROLE"
 }
