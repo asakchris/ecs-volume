@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM amazon/aws-cli:latest
 RUN mkdir -p /data/scheduler && mkdir -p /data/backup
 WORKDIR /opt/docker
 COPY bin bin

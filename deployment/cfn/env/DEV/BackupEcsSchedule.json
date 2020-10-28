@@ -3,6 +3,7 @@
   "EfsStackName": "${app_environment}-${app_name}-EFS",
   "RoleStackName": "${app_environment}-${app_name}-ROLE",
   "EcsClusterStackName": "${app_environment}-${app_name}-ECS-CLUSTER",
+  "S3StackName": "${app_environment}-${app_name}-S3",
   "VpcStackName": "${app_environment}-${app_name}-VPC",
   "SecurityGroupStackName": "${app_environment}-${app_name}-SECURITY-GROUP"
 }
