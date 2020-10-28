@@ -3,8 +3,8 @@ Description: This stack create ECS Cluster
 Parameters:
   Environment:
     Type: String
-    Description: Environment Name (DEV/QA/STG/BETA/PROD/DR)
-    AllowedValues: ['DEV', 'QA', 'BETA', 'PROD', 'DR']
+    Description: Environment Name (DEV)
+    AllowedValues: [ 'DEV' ]
   Platform:
     Type: String
     Default: 'IDS'
@@ -23,3 +23,8 @@ Outputs:
     Value: !Ref 'ECSCluster'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'EcsClusterName' ] ]
+  EcsClusterArn:
+    Description: The ARN of ECS cluster
+    Value: !GetAtt 'ECSCluster.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'EcsClusterNameArn' ] ]

@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This stack creates read services task definition and service
+Description: This stack creates backup task definition and schedule
 Parameters:
   Environment:
     Type: String
@@ -11,14 +11,11 @@ Parameters:
     Description: Platform Name
   AppName:
     Type: String
-    Default: 'READ'
+    Default: 'BACKUP'
     Description: Application Name
   EfsStackName:
     Type: String
     Description: Name of the stack which is used to create EFS
-  AlbStackName:
-    Type: String
-    Description: Name of the stack which is used to create ALB and Target Groups
   RoleStackName:
     Type: String
     Description: Name of the stack which is used to create Roles
@@ -44,7 +41,7 @@ Resources:
   ECSTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub '${Environment}-${Platform}-${AppName}-TD-02'
+      Family: !Sub '${Environment}-${Platform}-${AppName}-TD-03'
       Cpu: 512
       Memory: 1024
       NetworkMode: awsvpc
@@ -65,53 +62,61 @@ Resources:
               AccessPointId:
                 Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'AccessPointId' ] ]
               IAM: ENABLED
+        - Name: EFS-BACKUP
+            EFSVolumeConfiguration:
+              FilesystemId:
+                Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'FileSystemId' ] ]
+              #RootDirectory: /
+              TransitEncryption: 'ENABLED'
+              AuthorizationConfig:
+                AccessPointId:
+                  Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'AccessPointResourceBackupId' ] ]
+                IAM: ENABLED
       ContainerDefinitions:
         - Name: !Sub '${Environment}-${Platform}-${AppName}-CONTAINER'
           Cpu: 512
           Memory: 1024
-          Image: asakchris/ecs-volume-read:1.0.0-SNAPSHOT
-          PortMappings:
-            - ContainerPort: 8080
-            - ContainerPort: 8081
+          Image: asakchris/ecs-volume-backup:1.0.0-SNAPSHOT
           MountPoints:
             - SourceVolume: EFS-SHARED
               ContainerPath: /data/scheduler
-              ReadOnly: true
+            - SourceVolume: EFS-BACKUP
+                ContainerPath: /data/backup
           Environment:
             - Name: JAVA_OPTS
-              Value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMPercentage=85.0 -XshowSettings:vm -Duser.timezone=UTC
+              Value: -XX:+UnlockExperimentalVMOptions
           LogConfiguration:
             LogDriver: awslogs
             Options:
               awslogs-group: !Ref LogGroup
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: ecs
-
-  # Service is a resource which allows to run multiple copies of a type of task, and gather up their logs and metrics,
-  # as well as monitor the number of running tasks and replace any that have crashed
-  ECSService:
-    Type: AWS::ECS::Service
+  EventsRule:
+    Type: AWS::Events::Rule
     Properties:
-      ServiceName: !Sub '${Environment}-${Platform}-${AppName}-SERVICE-02'
-      Cluster:
-        Fn::ImportValue: !Join [ ':', [ !Ref 'EcsClusterStackName', 'EcsClusterName' ] ]
-      LaunchType: FARGATE
-      PlatformVersion: 1.4.0
-      DeploymentConfiguration:
-        MaximumPercent: 100
-        MinimumHealthyPercent: 0
-      DesiredCount: 1
-      TaskDefinition: !Ref ECSTaskDefinition
-      NetworkConfiguration:
-        AwsvpcConfiguration:
-          AssignPublicIp: DISABLED
-          SecurityGroups:
-            - Fn::ImportValue: !Join [ ':', [ !Ref 'SecurityGroupStackName', 'ContainerSecurityGroupId' ] ]
-          Subnets:
-            - Fn::ImportValue: !Join [ ':', [ !Ref 'VpcStackName', 'PrivateSubnetOne' ] ]
-            - Fn::ImportValue: !Join [ ':', [ !Ref 'VpcStackName', 'PrivateSubnetTwo' ] ]
-      LoadBalancers:
-        - ContainerName: !Sub '${Environment}-${Platform}-${AppName}-CONTAINER'
-          ContainerPort: 8080
-          TargetGroupArn:
-            Fn::ImportValue: !Join [ ':', [ !Ref 'AlbStackName', 'ReadTargetGroupArn' ] ]
+      Name: !Sub '${AppName}-EVENTS_RULE-01'
+      Description: !Sub 'Trigger ${AppName} according to the specified schedule'
+      # Run every 15 minutes Monday through Friday
+      ScheduleExpression: cron(0/15 * ? * MON-FRI *)
+      RoleArn:
+        Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskExecutionRoleArn' ] ]
+      State: ENABLED
+      Targets:
+        - Id: !Sub '${AppName}-FARGATE-TASK-01'
+          RoleArn:
+            Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskBackupRoleArn' ] ]
+          Arn:
+            Fn::ImportValue: !Join [ ':', [ !Ref 'EcsClusterStackName', 'EcsClusterNameArn' ] ]
+          EcsParameters:
+            TaskDefinitionArn: !Ref ECSTaskDefinition
+            TaskCount: 1
+            LaunchType: FARGATE
+            PlatformVersion: 1.4.0
+            NetworkConfiguration:
+              AwsvpcConfiguration:
+                AssignPublicIp: DISABLED
+                SecurityGroups:
+                  - Fn::ImportValue: !Join [ ':', [ !Ref 'SecurityGroupStackName', 'ContainerSecurityGroupId' ] ]
+                Subnets:
+                  - Fn::ImportValue: !Join [ ':', [ !Ref 'VpcStackName', 'PrivateSubnetOne' ] ]
+                  - Fn::ImportValue: !Join [ ':', [ !Ref 'VpcStackName', 'PrivateSubnetTwo' ] ]

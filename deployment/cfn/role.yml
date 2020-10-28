@@ -3,12 +3,15 @@ Description: This stack creates all required security groups
 Parameters:
   Environment:
     Type: String
-    Description: Environment Name (DEV/QA/BETA/PROD/DR)
-    AllowedValues: ['DEV', 'QA', 'BETA', 'PROD', 'DR']
+    Description: Environment Name (DEV)
+    AllowedValues: [ 'DEV' ]
   Platform:
     Type: String
     Default: 'IDS'
     Description: Platform Name
+  S3StackName:
+    Type: String
+    Description: Name of the stack which is used to create S3 buckets
 Resources:
   ECSTaskExecutionRole:
     Type: AWS::IAM::Role
@@ -18,8 +21,8 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: [ecs-tasks.amazonaws.com]
-            Action: ['sts:AssumeRole']
+              Service: [ ecs-tasks.amazonaws.com ]
+            Action: [ 'sts:AssumeRole' ]
       Path: /
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
@@ -36,6 +39,32 @@ Resources:
       Path: /
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
+  ECSTaskBackupRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${Environment}-${Platform}-ECS-TASK-BACKUP-ROLE-03'
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ ecs-tasks.amazonaws.com ]
+            Action: [ 'sts:AssumeRole' ]
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
+      Policies:
+        - PolicyName: !Sub '${Environment}-${Platform}-ECS-TASK-BACKUP-ROLE-POLICY-01'
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:PutObject'
+                  - 's3:DeleteObject'
+                Resource:
+                  - !Sub 'arn:aws:s3:::${BucketArn}'
+                  - !Sub 'arn:aws:s3:::${BucketArn}/*'
+                  - BucketArn:
+                      Fn::ImportValue: !Join [':', [!Ref 'S3StackName', 'BackupBucketArn']]
 Outputs:
   ECSTaskExecutionRole:
     Description: ARN of ECS task execution role
@@ -47,3 +76,8 @@ Outputs:
     Value: !GetAtt 'ECSTaskRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ECSTaskRoleArn' ] ]
+  ECSTaskBackupRole:
+    Description: ARN of ECS task backup role
+    Value: !GetAtt 'ECSTaskBackupRole.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ECSTaskBackupRoleArn' ] ]

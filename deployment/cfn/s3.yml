@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This stack creates all S3 buckets required for RIPA
+Parameters:
+  Environment:
+    Type: String
+    Description: Environment Name (DEV)
+    AllowedValues: [ 'DEV' ]
+  Platform:
+    Type: String
+    Default: 'IDS'
+    Description: Platform Name
+Mappings:
+  EnvironmentMap:
+    DEV:
+      EnvNameLowercase: dev
+      PlatformLowercase: 'ids'
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub
+        - '${EnvLower}-${PlatformLower}-backup-${AWS::Region}-01'
+        - EnvLower: !FindInMap [ EnvironmentMap, !Ref 'Environment', EnvNameLowercase ]
+          PlatformLower: !FindInMap [ EnvironmentMap, !Ref 'Environment', PlatformLowercase ]
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: Name
+          Value: !Sub '${Environment}-${Platform}-BACKUP-S3-01'
+Outputs:
+  S3BucketName:
+    Description: Name of backup Bucket
+    Value: !Ref S3Bucket
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'BackupBucket' ] ]
+  S3BucketArn:
+    Description: ARN of backup Bucket
+    Value: !GetAtt 'S3Bucket.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'BackupBucketArn' ] ]

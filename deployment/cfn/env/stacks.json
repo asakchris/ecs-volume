@@ -12,6 +12,17 @@
       ]
     },
     {
+      "groupName": "s3",
+      "groupStacks": [
+        {
+          "stackName": "${app_environment}-${app_name}-S3",
+          "templateFile": "${cfn_dir}/s3.yml",
+          "paramFile": "${cfn_dir}/env/${app_environment}/S3.json",
+          "canBeDeleted": "No"
+        }
+      ]
+    },
+    {
       "groupName": "securityGroupAndRole",
       "groupStacks": [
         {
@@ -57,6 +68,11 @@
         {
           "stackName": "${app_environment}-${app_name}-ECS-SERVICE-READ",
           "templateFile": "${cfn_dir}/read-ecs-service.yml",
+          "paramFile": "${cfn_dir}/env/${app_environment}/ReadEcsService.json"
+        },
+        {
+          "stackName": "${app_environment}-${app_name}-ECS-SCHEDULE-BACKUP",
+          "templateFile": "${cfn_dir}/backup-schedule.yml",
           "paramFile": "${cfn_dir}/env/${app_environment}/ReadEcsService.json"
         }
       ]

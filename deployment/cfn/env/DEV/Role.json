@@ -1,3 +1,4 @@
 {
-  "Environment": "${app_environment}"
+  "Environment": "${app_environment}",
+  "S3StackName": "${app_environment}-${app_name}-S3"
 }

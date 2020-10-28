@@ -3,8 +3,8 @@ Description: This stack creates all required security groups
 Parameters:
   Environment:
     Type: String
-    Description: Environment Name (DEV/QA/BETA/PROD/DR)
-    AllowedValues: ['DEV', 'QA', 'BETA', 'PROD', 'DR']
+    Description: Environment Name (DEV)
+    AllowedValues: [ 'DEV' ]
   Platform:
     Type: String
     Default: 'IDS'
@@ -20,7 +20,7 @@ Resources:
     Properties:
       GroupDescription: Access to the public facing load balancer
       VpcId:
-        Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'VPCId']]
+        Fn::ImportValue: !Join [ ':', [ !Ref 'VpcStackName', 'VPCId' ] ]
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
@@ -44,7 +44,7 @@ Resources:
     Properties:
       GroupDescription: Access to the ECS hosts that run containers
       VpcId:
-        Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'VPCId']]
+        Fn::ImportValue: !Join [ ':', [ !Ref 'VpcStackName', 'VPCId' ] ]
       Tags:
         - Key: Name
           Value: !Sub '${Environment}-${Platform}-CONTAINER-SG-02'
@@ -69,7 +69,7 @@ Resources:
     Properties:
       GroupDescription: Access to EFS
       VpcId:
-        Fn::ImportValue: !Join [':', [!Ref 'VpcStackName', 'VPCId']]
+        Fn::ImportValue: !Join [ ':', [ !Ref 'VpcStackName', 'VPCId' ] ]
       Tags:
         - Key: Name
           Value: !Sub '${Environment}-${Platform}-EFS-SG-03'
