@@ -66,15 +66,15 @@ Resources:
                 Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'AccessPointId' ] ]
               IAM: ENABLED
         - Name: EFS-BACKUP
-            EFSVolumeConfiguration:
-              FilesystemId:
-                Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'FileSystemId' ] ]
-              #RootDirectory: /
-              TransitEncryption: 'ENABLED'
-              AuthorizationConfig:
-                AccessPointId:
-                  Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'AccessPointResourceBackupId' ] ]
-                IAM: ENABLED
+          EFSVolumeConfiguration:
+            FilesystemId:
+              Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'FileSystemId' ] ]
+            #RootDirectory: /
+            TransitEncryption: 'ENABLED'
+            AuthorizationConfig:
+              AccessPointId:
+                Fn::ImportValue: !Join [ ':', [ !Ref 'EfsStackName', 'AccessPointResourceBackupId' ] ]
+              IAM: ENABLED
       ContainerDefinitions:
         - Name: !Sub '${Environment}-${Platform}-${AppName}-CONTAINER'
           Cpu: 512
@@ -84,7 +84,7 @@ Resources:
             - SourceVolume: EFS-SHARED
               ContainerPath: /data/scheduler
             - SourceVolume: EFS-BACKUP
-                ContainerPath: /data/backup
+              ContainerPath: /data/backup
           Environment:
             - Name: BACKUP_S3_BUCKET
               Value:

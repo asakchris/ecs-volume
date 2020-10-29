@@ -61,10 +61,7 @@ Resources:
                   - 's3:PutObject'
                   - 's3:DeleteObject'
                 Resource:
-                  - !Sub 'arn:aws:s3:::${BucketArn}'
-                  - !Sub 'arn:aws:s3:::${BucketArn}/*'
-                  - BucketArn:
-                      Fn::ImportValue: !Join [':', [!Ref 'S3StackName', 'BackupBucketArn']]
+                  - Fn::ImportValue: !Join [ ':', [ !Ref 'S3StackName', 'BackupBucketArn' ] ]
 Outputs:
   ECSTaskExecutionRole:
     Description: ARN of ECS task execution role

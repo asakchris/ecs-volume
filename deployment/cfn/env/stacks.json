@@ -73,7 +73,7 @@
         {
           "stackName": "${app_environment}-${app_name}-ECS-SCHEDULE-BACKUP",
           "templateFile": "${cfn_dir}/backup-schedule.yml",
-          "paramFile": "${cfn_dir}/env/${app_environment}/ReadEcsService.json"
+          "paramFile": "${cfn_dir}/env/${app_environment}/BackupEcsSchedule.json"
         }
       ]
     }
