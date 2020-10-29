@@ -102,8 +102,8 @@ Resources:
       Description: !Sub 'Trigger ${AppName} according to the specified schedule'
       # Run every 15 minutes Monday through Friday
       ScheduleExpression: cron(0/15 * ? * MON-FRI *)
-      RoleArn:
-        Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskExecutionRoleArn' ] ]
+      #RoleArn:
+        #Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskExecutionRoleArn' ] ]
       State: ENABLED
       Targets:
         - Id: !Sub '${AppName}-FARGATE-TASK-01'
@@ -117,7 +117,7 @@ Resources:
             LaunchType: FARGATE
             PlatformVersion: 1.4.0
             NetworkConfiguration:
-              AwsvpcConfiguration:
+              AwsVpcConfiguration:
                 AssignPublicIp: DISABLED
                 SecurityGroups:
                   - Fn::ImportValue: !Join [ ':', [ !Ref 'SecurityGroupStackName', 'ContainerSecurityGroupId' ] ]
