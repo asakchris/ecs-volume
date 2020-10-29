@@ -107,10 +107,10 @@ Resources:
       State: ENABLED
       Targets:
         - Id: !Sub '${AppName}-FARGATE-TASK-01'
-          RoleArn:
-            Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskBackupRoleArn' ] ]
           Arn:
             Fn::ImportValue: !Join [ ':', [ !Ref 'EcsClusterStackName', 'EcsClusterNameArn' ] ]
+          RoleArn:
+            Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSEventRoleArn' ] ]
           EcsParameters:
             TaskDefinitionArn: !Ref ECSTaskDefinition
             TaskCount: 1

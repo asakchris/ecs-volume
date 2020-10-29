@@ -62,6 +62,26 @@ Resources:
                   - 's3:DeleteObject'
                 Resource:
                   - Fn::ImportValue: !Join [ ':', [ !Ref 'S3StackName', 'BackupBucketArn' ] ]
+  ECSEventRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${Environment}-${Platform}-ECS-EVENT-ROLE-04'
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ events.amazonaws.com ]
+            Action: [ 'sts:AssumeRole' ]
+      Path: /
+      Policies:
+        - PolicyName: !Sub '${Environment}-${Platform}-ECS-EVENT-ROLE-POLICY-02'
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ecs:RunTask'
+                Resource:
+                  - '*'
 Outputs:
   ECSTaskExecutionRole:
     Description: ARN of ECS task execution role
@@ -78,3 +98,8 @@ Outputs:
     Value: !GetAtt 'ECSTaskBackupRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ECSTaskBackupRoleArn' ] ]
+  ECSEventRole:
+    Description: ARN of ECS Event role
+    Value: !GetAtt 'ECSEventRole.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ECSEventRoleArn' ] ]
