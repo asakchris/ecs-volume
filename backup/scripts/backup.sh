@@ -15,3 +15,4 @@ aws s3 cp $filename s3://$BACKUP_S3_BUCKET
 
 # delete backup
 rm $filename
+echo "Backup task completed successfully"
