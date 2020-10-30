@@ -62,6 +62,10 @@ Resources:
                   - 's3:DeleteObject'
                 Resource:
                   - Fn::ImportValue: !Join [ ':', [ !Ref 'S3StackName', 'BackupBucketArn' ] ]
+                  - Fn::Sub:
+                      - ${S3BackupBucketArn}/*
+                      - S3BackupBucketArn:
+                          Fn::ImportValue: !Join [ ':', [ !Ref 'S3StackName', 'BackupBucketArn' ] ]
   ECSEventRole:
     Type: AWS::IAM::Role
     Properties:
@@ -73,15 +77,18 @@ Resources:
               Service: [ events.amazonaws.com ]
             Action: [ 'sts:AssumeRole' ]
       Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole'
       Policies:
         - PolicyName: !Sub '${Environment}-${Platform}-ECS-EVENT-ROLE-POLICY-02'
           PolicyDocument:
             Statement:
               - Effect: Allow
                 Action:
-                  - 'ecs:RunTask'
+                  - 'iam:PassRole'
                 Resource:
-                  - '*'
+                  - !GetAtt 'ECSTaskExecutionRole.Arn'
+                  - !GetAtt 'ECSTaskBackupRole.Arn'
 Outputs:
   ECSTaskExecutionRole:
     Description: ARN of ECS task execution role

@@ -33,7 +33,8 @@ Resources:
               - 'elasticfilesystem:ClientWrite'
             Principal:
               AWS:
-                Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskRoleArn' ] ]
+                - Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskRoleArn' ] ]
+                - Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskBackupRoleArn' ] ]
                 #Condition:
                 #StringEquals:
                 #'elasticfilesystem:AccessPointArn': !GetAtt 'AccessPointResource.Arn'
