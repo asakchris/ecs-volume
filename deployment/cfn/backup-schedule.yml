@@ -53,7 +53,7 @@ Resources:
       ExecutionRoleArn:
         Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskExecutionRoleArn' ] ]
       TaskRoleArn:
-        Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskRoleArn' ] ]
+        Fn::ImportValue: !Join [ ':', [ !Ref 'RoleStackName', 'ECSTaskBackupRoleArn' ] ]
       Volumes:
         - Name: EFS-SHARED
           EFSVolumeConfiguration:
