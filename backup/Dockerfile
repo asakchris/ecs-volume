@@ -3,7 +3,7 @@ RUN mkdir -p /data/scheduler && mkdir -p /data/backup
 WORKDIR /opt/docker
 COPY scripts bin
 USER root
-RUN yum -y install shadow-utils \
+RUN yum -y install shadow-utils tar \
         && yum clean all \
 		&& groupadd -g 1001 ids_grp_rw \
 		&& id -u ids_app_rw 2> /dev/null || useradd --system --create-home --uid 1001 --gid 1001 ids_app_rw \
